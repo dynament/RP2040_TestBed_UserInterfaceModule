@@ -1,24 +1,33 @@
 src/CMakeFiles/src.dir/main.c.obj: \
  C:\Users\craig.hemingway\VisualCode_Workspace\RP2040_TestBed_UserInterfaceModule\src\main.c \
  c:\users\craig.hemingway\visualcode_workspace\rp2040_testbed_userinterfacemodule\inc\main.h \
+ c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stdint.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\stdint.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\machine\_default_types.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\features.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\_newlib_version.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\_intsup.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\_stdint.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\stdio.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\_ansi.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\newlib.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\config.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\machine\ieeefp.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\cdefs.h \
+ c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stddef.h \
+ c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stdarg.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\reent.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\_ansi.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\_types.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\machine\_types.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\lock.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\stdio.h \
+ c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stdbool.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2_common\hardware_pio\include/hardware/pio_instructions.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_base\include/pico.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_base\include/pico/types.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_base\include/pico/assert.h \
- c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stdbool.h \
  c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\assert.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\_ansi.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\newlib.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\_newlib_version.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\config.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\machine\ieeefp.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\features.h \
- c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stdint.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\stdint.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\machine\_default_types.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\_intsup.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\_stdint.h \
- c:\vsarm\armcc\1142da~1.3re\lib\gcc\arm-none-eabi\11.3.1\include\stddef.h \
  C:\Users\craig.hemingway\VisualCode_Workspace\RP2040_TestBed_UserInterfaceModule\build\generated\pico_base/pico/version.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_base\include/pico/config.h \
  C:\Users\craig.hemingway\VisualCode_Workspace\RP2040_TestBed_UserInterfaceModule\build\generated\pico_base/pico/config_autogen.h \
@@ -28,7 +37,6 @@ src/CMakeFiles/src.dir/main.c.obj: \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/platform_defs.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/addressmap.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/sio.h \
- c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\cdefs.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_base\include/pico/types.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_base\include/pico/error.h \
  C:\VSARM\sdk\pico\pico-sdk\src\common\pico_stdlib\include/pico/stdlib.h \
@@ -52,7 +60,15 @@ src/CMakeFiles/src.dir/main.c.obj: \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/uart.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/uart.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/dreq.h \
- C:\VSARM\sdk\pico\pico-sdk\src\rp2_common\pico_stdio_uart\include/pico/stdio_uart.h \
+ C:\VSARM\sdk\pico\pico-sdk\src\rp2_common\pico_stdio_usb\include/pico/stdio_usb.h \
+ c:\users\craig.hemingway\visualcode_workspace\rp2040_testbed_userinterfacemodule\inc\matrix_default.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\string.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\_locale.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\strings.h \
+ c:\vsarm\armcc\1142da~1.3re\arm-none-eabi\include\sys\string.h \
+ C:\VSARM\sdk\pico\pico-sdk\src\rp2_common\hardware_spi\include/hardware/spi.h \
+ C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/spi.h \
+ C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/spi.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2_common\hardware_watchdog\include/hardware/watchdog.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/watchdog.h \
  C:\VSARM\sdk\pico\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/watchdog.h \
