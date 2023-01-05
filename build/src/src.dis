@@ -3831,7 +3831,7 @@ Disassembly of section .text:
 10001ed6:	f007 f90b 	bl	100090f0 <__spi_write_read_blocking_veneer>
 10001eda:	4b1e      	ldr	r3, [pc, #120]	; (10001f54 <main+0x3b0>)
 10001edc:	22fa      	movs	r2, #250	; 0xfa
-10001ede:	0092      	lsls	r2, r2, #2
+10001ede:	0052      	lsls	r2, r2, #1
 10001ee0:	801a      	strh	r2, [r3, #0]
 10001ee2:	7923      	ldrb	r3, [r4, #4]
 10001ee4:	2b55      	cmp	r3, #85	; 0x55

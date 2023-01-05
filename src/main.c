@@ -31,16 +31,12 @@ uint16_t MatrixData [ MATRIX_HEIGHT ] [ MATRIX_WIDTH ];
 
 // SPI
 uint8_t SPI_RxBuffer [ 10 ] = { 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 };
-const    uint16_t SPI_RX_PERIOD = 1000; // Minimum delay ( ms ) between messages ( polling )
+const    uint16_t SPI_RX_PERIOD = 500;  // Minimum delay ( ms ) between messages ( polling )
 const    uint16_t SPI_TX_PERIOD = 500;  // Minimum delay ( ms ) between messages ( button press )
 volatile uint16_t SPI_RxPeriod  = 0;
 volatile uint16_t SPI_TxPeriod  = 0;
 
 // DAC check
-// const uint8_t DAC_CHECK_IDLE          = 0b00000000;
-// const uint8_t DAC_CHECK_STATUS        = 0b00000001;
-// const uint8_t DAC_CHECK_ZERO          = 0b00000010;
-// const uint8_t DAC_CHECK_FSD           = 0b00000100;
 const uint8_t DAC_CHECK_IS_READY    = 0x10;
 const uint8_t DAC_CHECK_RUNNING     = 0x0B;
 const uint8_t DAC_CHECK_NOT_RUNNING = 0x0F;
