@@ -1627,9 +1627,9 @@ Discarded input sections
                 0x00000000       0x3c CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
  .time_critical.spi_read16_blocking
                 0x00000000       0x3e CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
- .text          0x00000000        0x0 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\cczYFGQo.o
- .data          0x00000000        0x0 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\cczYFGQo.o
- .bss           0x00000000        0x0 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\cczYFGQo.o
+ .text          0x00000000        0x0 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\ccH3HSKd.o
+ .data          0x00000000        0x0 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\ccH3HSKd.o
+ .bss           0x00000000        0x0 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\ccH3HSKd.o
  .data          0x00000000        0x0 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .bss           0x00000000        0x0 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .text          0x00000000        0x0 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libg.a(libc_a-calloc.o)
@@ -2260,7 +2260,7 @@ LOAD c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/
 .boot2          0x10000000      0x100
                 0x10000000                __boot2_start__ = .
  *(.boot2)
- .boot2         0x10000000      0x100 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\cczYFGQo.o
+ .boot2         0x10000000      0x100 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\ccH3HSKd.o
                 0x10000100                __boot2_end__ = .
                 0x00000001                ASSERT (((__boot2_end__ - __boot2_start__) == 0x100), ERROR: Pico second stage bootloader must be 256 bytes in size)
 
@@ -2329,9 +2329,9 @@ LOAD c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/
                 0x100002c4       0x28 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtbegin.o
  .text.frame_dummy
                 0x100002ec       0x24 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtbegin.o
- .text.timer_1ms_callback
+ .text.timer_counter_callback
                 0x10000310       0x34 CMakeFiles/src.dir/main.c.obj
-                0x10000310                timer_1ms_callback
+                0x10000310                timer_counter_callback
  .text.timer_heartbeat_callback
                 0x10000344       0x22 CMakeFiles/src.dir/main.c.obj
                 0x10000344                timer_heartbeat_callback
@@ -3642,9 +3642,9 @@ LOAD c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/
                 0x200005a0      0x100 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_time/time.c.obj
  .bss.last_avail_time.3
                 0x200006a0        0x8 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
- .bss.timer_1ms
+ .bss.timer_counter
                 0x200006a8       0x18 CMakeFiles/src.dir/main.c.obj
-                0x200006a8                timer_1ms
+                0x200006a8                timer_counter
  .bss.timer_heartbeat
                 0x200006c0       0x18 CMakeFiles/src.dir/main.c.obj
                 0x200006c0                timer_heartbeat
@@ -3842,7 +3842,7 @@ LOAD CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_dma/d
 LOAD CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
 LOAD CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.obj
 LOAD CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
-LOAD C:\Users\CRAIG~1.HEM\AppData\Local\Temp\cczYFGQo.o
+LOAD C:\Users\CRAIG~1.HEM\AppData\Local\Temp\ccH3HSKd.o
 LOAD c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libstdc++.a
 LOAD c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libm.a
 START GROUP
@@ -3959,7 +3959,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x000007a2       0x2c CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
  .ARM.attributes
-                0x000007ce       0x22 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\cczYFGQo.o
+                0x000007ce       0x22 C:\Users\CRAIG~1.HEM\AppData\Local\Temp\ccH3HSKd.o
  .ARM.attributes
                 0x000007f0       0x1e c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .ARM.attributes
@@ -4418,100 +4418,100 @@ LOAD linker stubs
  .debug_line    0x000175c7       0x4a c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
  .debug_line    0x00017611      0x1e1 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libg.a(libc_a-strlen-stub.o)
 
-.debug_str      0x00000000     0x6f66
- .debug_str     0x00000000      0x885 CMakeFiles/src.dir/main.c.obj
-                                0x988 (size before relaxing)
- .debug_str     0x00000885      0x503 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
+.debug_str      0x00000000     0x6f6e
+ .debug_str     0x00000000      0x88d CMakeFiles/src.dir/main.c.obj
+                                0x990 (size before relaxing)
+ .debug_str     0x0000088d      0x503 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
                                 0x9c2 (size before relaxing)
- .debug_str     0x00000d88      0x1bc CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
+ .debug_str     0x00000d90      0x1bc CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
                                 0x38e (size before relaxing)
- .debug_str     0x00000f44       0x81 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
+ .debug_str     0x00000f4c       0x81 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
                                 0x24a (size before relaxing)
- .debug_str     0x00000fc5       0xec CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+ .debug_str     0x00000fcd       0xec CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
                                 0x375 (size before relaxing)
- .debug_str     0x000010b1      0x415 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+ .debug_str     0x000010b9      0x415 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
                                 0x83b (size before relaxing)
- .debug_str     0x000014c6       0x5c CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
+ .debug_str     0x000014ce       0x5c CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_sync/lock_core.c.obj
                                 0x22b (size before relaxing)
- .debug_str     0x00001522      0x6ad CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_time/time.c.obj
+ .debug_str     0x0000152a      0x6ad CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_time/time.c.obj
                                 0xbe1 (size before relaxing)
- .debug_str     0x00001bcf      0x12d CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+ .debug_str     0x00001bd7      0x12d CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
                                 0x6d1 (size before relaxing)
- .debug_str     0x00001cfc       0xe6 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_util/pheap.c.obj
+ .debug_str     0x00001d04       0xe6 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_util/pheap.c.obj
                                 0x41b (size before relaxing)
- .debug_str     0x00001de2      0x165 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
+ .debug_str     0x00001dea      0x165 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_sync/mutex.c.obj
                                 0x5ef (size before relaxing)
- .debug_str     0x00001f47       0xd4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj
+ .debug_str     0x00001f4f       0xd4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/common/pico_sync/critical_section.c.obj
                                 0x2eb (size before relaxing)
- .debug_str     0x0000201b      0x289 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+ .debug_str     0x00002023      0x289 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
                                 0x62d (size before relaxing)
- .debug_str     0x000022a4      0x276 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
+ .debug_str     0x000022ac      0x276 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
                                 0x6af (size before relaxing)
- .debug_str     0x0000251a       0x8f CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
+ .debug_str     0x00002522       0x8f CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
                                 0x305 (size before relaxing)
- .debug_str     0x000025a9      0x116 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
+ .debug_str     0x000025b1      0x116 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
                                 0x34c (size before relaxing)
- .debug_str     0x000026bf       0x6b CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
+ .debug_str     0x000026c7       0x6b CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
                                 0x249 (size before relaxing)
- .debug_str     0x0000272a      0x266 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+ .debug_str     0x00002732      0x266 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
                                 0x4aa (size before relaxing)
- .debug_str     0x00002990       0x53 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
+ .debug_str     0x00002998       0x53 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
                                  0xae (size before relaxing)
- .debug_str     0x000029e3       0xc4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
+ .debug_str     0x000029eb       0xc4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
                                 0x284 (size before relaxing)
- .debug_str     0x00002aa7       0x41 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
+ .debug_str     0x00002aaf       0x41 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
                                  0xa8 (size before relaxing)
- .debug_str     0x00002ae8       0x45 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+ .debug_str     0x00002af0       0x45 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
                                  0xac (size before relaxing)
- .debug_str     0x00002b2d       0xbd CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
+ .debug_str     0x00002b35       0xbd CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
                                 0x2ea (size before relaxing)
- .debug_str     0x00002bea       0x4b CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+ .debug_str     0x00002bf2       0x4b CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
                                  0xb2 (size before relaxing)
- .debug_str     0x00002c35       0x50 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
+ .debug_str     0x00002c3d       0x50 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
                                  0xb7 (size before relaxing)
- .debug_str     0x00002c85       0x43 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
+ .debug_str     0x00002c8d       0x43 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
                                  0xaa (size before relaxing)
- .debug_str     0x00002cc8       0x81 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
+ .debug_str     0x00002cd0       0x81 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
                                 0x2e6 (size before relaxing)
- .debug_str     0x00002d49       0x49 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
+ .debug_str     0x00002d51       0x49 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
                                  0xb0 (size before relaxing)
- .debug_str     0x00002d92       0x47 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
+ .debug_str     0x00002d9a       0x47 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
                                  0xae (size before relaxing)
- .debug_str     0x00002dd9       0x44 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
+ .debug_str     0x00002de1       0x44 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
                                  0xab (size before relaxing)
- .debug_str     0x00002e1d      0x217 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+ .debug_str     0x00002e25      0x217 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
                                 0x40c (size before relaxing)
- .debug_str     0x00003034      0x348 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_str     0x0000303c      0x348 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
                                 0x7e8 (size before relaxing)
- .debug_str     0x0000337c      0x660 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+ .debug_str     0x00003384      0x660 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
                                 0x88d (size before relaxing)
- .debug_str     0x000039dc      0x258 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+ .debug_str     0x000039e4      0x258 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
                                 0x95a (size before relaxing)
- .debug_str     0x00003c34      0xae2 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+ .debug_str     0x00003c3c      0xae2 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
                                 0xfb8 (size before relaxing)
- .debug_str     0x00004716      0x931 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+ .debug_str     0x0000471e      0x931 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
                                 0xe4b (size before relaxing)
- .debug_str     0x00005047      0x13a CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
+ .debug_str     0x0000504f      0x13a CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
                                 0x881 (size before relaxing)
- .debug_str     0x00005181      0xa00 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+ .debug_str     0x00005189      0xa00 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
                                0x18df (size before relaxing)
- .debug_str     0x00005b81       0xd4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+ .debug_str     0x00005b89       0xd4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
                                 0x659 (size before relaxing)
- .debug_str     0x00005c55      0x6e2 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+ .debug_str     0x00005c5d      0x6e2 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
                                0x169e (size before relaxing)
- .debug_str     0x00006337       0xd4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/tusb.c.obj
+ .debug_str     0x0000633f       0xd4 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/tusb.c.obj
                                 0x8eb (size before relaxing)
- .debug_str     0x0000640b      0x38b CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+ .debug_str     0x00006413      0x38b CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
                                 0x7be (size before relaxing)
- .debug_str     0x00006796       0xc0 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
+ .debug_str     0x0000679e       0xc0 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
                                 0x29d (size before relaxing)
- .debug_str     0x00006856      0x308 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_flash/flash.c.obj
+ .debug_str     0x0000685e      0x308 CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_flash/flash.c.obj
                                 0x60c (size before relaxing)
- .debug_str     0x00006b5e      0x1cb CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
+ .debug_str     0x00006b66      0x1cb CMakeFiles/src.dir/C_/VSARM/sdk/pico/pico-sdk/src/rp2_common/hardware_spi/spi.c.obj
                                 0x5bb (size before relaxing)
- .debug_str     0x00006d29       0xc9 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
+ .debug_str     0x00006d31       0xc9 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libgcc.a(_dvmd_tls.o)
                                  0xd5 (size before relaxing)
- .debug_str     0x00006df2      0x174 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libg.a(libc_a-strlen-stub.o)
+ .debug_str     0x00006dfa      0x174 c:/vsarm/armcc/1142da~1.3re/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp\libg.a(libc_a-strlen-stub.o)
                                 0x21d (size before relaxing)
 
 .debug_frame    0x00000000     0x28fc

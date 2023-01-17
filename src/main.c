@@ -43,7 +43,7 @@ const uint8_t DAC_CHECK_NOT_RUNNING = 0x0F;
 const uint8_t SYNC_BYTE             = 0x55;
 
 // struct repeating_timer refresh_display;
-struct repeating_timer timer_1ms;
+struct repeating_timer timer_counter;
 struct repeating_timer timer_heartbeat;
 
 void DrawMatrix       ( void );
@@ -51,7 +51,7 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos );
 void watchdog         ( void );
 
 // Timer interrupts
-bool timer_1ms_callback ( struct repeating_timer *t )
+bool timer_counter_callback ( struct repeating_timer *t )
 {
     if ( g_SPI_RxPeriod )
     {
@@ -155,7 +155,7 @@ int main ( void )
 
     // Set up timer interrupts
     add_repeating_timer_ms ( 500 , timer_heartbeat_callback , NULL , &timer_heartbeat );
-    add_repeating_timer_ms (   1 , timer_1ms_callback       , NULL , &timer_1ms       );
+    add_repeating_timer_ms (   1 , timer_counter_callback   , NULL , &timer_counter   );
 
     BIT_A_LOW;
     BIT_B_LOW;
