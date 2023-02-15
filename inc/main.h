@@ -35,30 +35,30 @@
 #define WATCHDOG_MILLISECONDS   8000    // Maximum 8 300 ms
 
 // GPIO
-#define BIT_A_PIN        7
-#define BIT_B_PIN        8
-#define BIT_C_PIN        9
-#define BIT_D_PIN       10
-#define I2C_SCL_PIN     27
-#define I2C_SDA_PIN     26
-#define LED_B1_PIN      16
-#define LED_B2_PIN      17
-#define LED_G1_PIN      14
-#define LED_G2_PIN      15
-#define LED_PICO_PIN    25
-#define LED_R1_PIN      12
-#define LED_R2_PIN      13
-#define MATRIX_CLK_PIN   5
-#define MATRIX_LAT_PIN   4
-#define MATRIX_OE_PIN    6
-#define SPI_CS_PIN       1
-#define SPI_MISO_PIN     0
-#define SPI_MOSI_PIN     3
-#define SPI_SCK_PIN      2
-#define SW1             21
-#define SW2             20
-#define SW3             19
-#define SW4             18
+#define BIT_A_PIN       25  //  7
+#define BIT_B_PIN       24  //  8
+#define BIT_C_PIN       29  //  9
+#define BIT_D_PIN       28  // 10
+// #define I2C_SCL_PIN     27
+// #define I2C_SDA_PIN     26
+#define LED_B1_PIN       9  // 16
+#define LED_B2_PIN      12  // 17
+#define LED_G1_PIN       7  // 14
+#define LED_G2_PIN      10  // 15
+#define LED_PICO_PIN    16  // 25
+#define LED_R1_PIN       8  // 12
+#define LED_R2_PIN      11  // 13
+#define MATRIX_CLK_PIN  13  //  5
+#define MATRIX_LAT_PIN   6  //  4
+#define MATRIX_OE_PIN    0  //  6
+#define SPI_CS_PIN       1  //  1
+#define SPI_MISO_PIN    20  //  0
+#define SPI_MOSI_PIN    19  //  3
+#define SPI_SCK_PIN     18  //  2
+#define SW1             26  // 21
+#define SW2             27  // 20
+#define SW3              3  // 19
+#define SW4              2  // 18
 
 #define BIT_A_HIGH          gpio_put ( BIT_A_PIN      , 1 )
 #define BIT_A_LOW           gpio_put ( BIT_A_PIN      , 0 )

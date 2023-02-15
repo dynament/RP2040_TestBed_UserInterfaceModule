@@ -46,12 +46,12 @@ const uint8_t SYNC_BYTE             = 0x55;
 struct repeating_timer timer_counter;
 struct repeating_timer timer_heartbeat;
 
-void DrawMatrix       ( void );
-void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos );
-void watchdog         ( void );
+static void Matrix_Draw      ( void );
+static void Matrix_SetBuffer ( uint8_t sensor , uint8_t state , uint8_t pos );
+static void Watchdog         ( void );
 
 // Timer interrupts
-bool timer_counter_callback ( struct repeating_timer *t )
+static bool timer_counter_isr ( struct repeating_timer *t )
 {
     if ( g_SPI_RxPeriod )
     {
@@ -72,7 +72,7 @@ bool timer_counter_callback ( struct repeating_timer *t )
     }
 }
 
-bool timer_heartbeat_callback ( struct repeating_timer *t )
+static bool timer_heartbeat_isr ( struct repeating_timer *t )
 {
     if ( gpio_get ( LED_PICO_PIN ) )
     {
@@ -154,8 +154,8 @@ int main ( void )
     gpio_set_function ( SPI_SCK_PIN  , GPIO_FUNC_SPI        );
 
     // Set up timer interrupts
-    add_repeating_timer_ms ( 500 , timer_heartbeat_callback , NULL , &timer_heartbeat );
-    add_repeating_timer_ms (   1 , timer_counter_callback   , NULL , &timer_counter   );
+    add_repeating_timer_ms ( 500 , timer_heartbeat_isr , NULL , &timer_heartbeat );
+    add_repeating_timer_ms (   1 , timer_counter_isr   , NULL , &timer_counter   );
 
     BIT_A_LOW;
     BIT_B_LOW;
@@ -188,11 +188,11 @@ int main ( void )
         {
             if ( Counter_Rows < 16 )
             {
-                MatrixData [ Counter_Rows ] [ Counter_Columns ] = MatrixRow [ Counter_Rows ] + 0b0000000000010000;
+                MatrixData [ Counter_Rows ] [ Counter_Columns ] = MatrixRow [ Counter_Rows ];// + 0b0000000000010000;
             }
             else
             {
-                MatrixData [ Counter_Rows ] [ Counter_Columns ] = MatrixRow [ Counter_Rows ] + 0b0000000010000000;
+                MatrixData [ Counter_Rows ] [ Counter_Columns ] = MatrixRow [ Counter_Rows ];// + 0b0000000010000000;
             }
         }
     }
@@ -204,7 +204,7 @@ int main ( void )
     // Infinite loop
     for ( ; ; )
     {
-        watchdog ( );
+        Watchdog ( );
 
         // Get button presses
         ButtonPress = ( ( gpio_get ( SW4 ) ) << 3 ) + ( ( gpio_get ( SW3 ) ) << 2 ) + ( ( gpio_get ( SW2 ) ) << 1 ) + gpio_get ( SW1 );
@@ -251,14 +251,14 @@ int main ( void )
         for ( Counter_Columns = 0 ; Counter_Columns < 24 ; Counter_Columns++ )
         {
             SensorState = ( SensorPass >> Counter_Columns ) & 0b00000001; 
-            SetMatrix_Buffer ( Counter_Columns , SensorState , SensorPos );
+            Matrix_SetBuffer ( Counter_Columns , SensorState , SensorPos );
         }
 
-        DrawMatrix ( );
+        Matrix_Draw ( );
     }
 }
 
-void DrawMatrix ( void )
+void Matrix_Draw ( void )
 {
     volatile uint8_t Counter_Column = 0;
     volatile uint8_t Counter_Row    = 0;
@@ -294,7 +294,7 @@ void DrawMatrix ( void )
 
 }
 
-void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
+void Matrix_SetBuffer ( uint8_t sensor , uint8_t state , uint8_t pos )
 {
     volatile uint8_t Counter = 0;
 
@@ -315,6 +315,12 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
                     MatrixData [ Counter ] [ 3 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                 }
+                else if ( 0 == pos )
+                {
+                    MatrixData [ Counter ] [ 2 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 3 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 4 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                }
                 else    // Invalid state
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_BLUE_TOP + MatrixRow [ Counter ];
@@ -327,17 +333,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 1:
             for ( Counter = 2 ; Counter < 6 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 1 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 1 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 1 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 1 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 1 == pos )
+                {
+                    MatrixData [ Counter ] [ 7 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 8 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 9 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -351,17 +363,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 2:
             for ( Counter = 2 ; Counter < 6 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 2 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 2 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 2 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 2 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 2 == pos )
+                {
+                    MatrixData [ Counter ] [ 12 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 13 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 14 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -375,17 +393,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 3:
             for ( Counter = 2 ; Counter < 6 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 3 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 3 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 3 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 3 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 3 == pos )
+                {
+                    MatrixData [ Counter ] [ 17 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 18 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 19 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -399,17 +423,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 4:
             for ( Counter = 2 ; Counter < 6 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 4 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 4 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 4 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 4 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 4 == pos )
+                {
+                    MatrixData [ Counter ] [ 22 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 23 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 24 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -423,17 +453,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 5:
             for ( Counter = 2 ; Counter < 6 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 5 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 5 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 5 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 5 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 5 == pos )
+                {
+                    MatrixData [ Counter ] [ 27 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 28 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 29 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -447,17 +483,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 6:
             for ( Counter = 9 ; Counter < 13 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 6 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 6 < pos ) )
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 3 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 6 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 6 < pos ) )
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 3 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 6 == pos )
+                {
+                    MatrixData [ Counter ] [ 2 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 3 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 4 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -471,17 +513,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 7:
             for ( Counter = 9 ; Counter < 13 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 7 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 7 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 7 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 7 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 7 == pos )
+                {
+                    MatrixData [ Counter ] [ 7 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 8 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 9 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -495,17 +543,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 8:
             for ( Counter = 9 ; Counter < 13 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 8 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 8 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 8 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 8 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 8 == pos )
+                {
+                    MatrixData [ Counter ] [ 12 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 13 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 14 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -519,17 +573,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 9:
             for ( Counter = 9 ; Counter < 13 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 9 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 9 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 9 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 9 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 9 == pos )
+                {
+                    MatrixData [ Counter ] [ 17 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 18 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 19 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -543,17 +603,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 10:
             for ( Counter = 9 ; Counter < 13 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 10 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 10 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 10 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 10 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 10 == pos )
+                {
+                    MatrixData [ Counter ] [ 22 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 23 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 24 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -567,17 +633,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 11:
             for ( Counter = 9 ; Counter < 13 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 11 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 11 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_RED_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_RED_TOP + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 11 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 11 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_GREEN_TOP + MatrixRow [ Counter ];
+                }
+                else if ( 11 == pos )
+                {
+                    MatrixData [ Counter ] [ 27 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 28 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 29 ] = LED_YELLOW_TOP + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -591,17 +663,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 12:
             for ( Counter = 16 ; Counter < 20 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 12 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 12 < pos ) )
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 3 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 12 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 12 < pos ) )
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 3 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 12 == pos )
+                {
+                    MatrixData [ Counter ] [ 2 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 3 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 4 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -615,17 +693,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 13:
             for ( Counter = 16 ; Counter < 20 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 13 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 13 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 13 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 13 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 13 == pos )
+                {
+                    MatrixData [ Counter ] [ 7 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 8 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 9 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -639,17 +723,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 14:
             for ( Counter = 16 ; Counter < 20 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 14 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 14 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 14 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 14 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 14 == pos )
+                {
+                    MatrixData [ Counter ] [ 12 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 13 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 14 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -663,17 +753,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 15:
             for ( Counter = 16 ; Counter < 20 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 15 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 15 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 15 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 15 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 15 == pos )
+                {
+                    MatrixData [ Counter ] [ 17 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 18 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 19 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -687,17 +783,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 16:
             for ( Counter = 16 ; Counter < 20 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 16 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 16 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 16 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 16 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 16 == pos )
+                {
+                    MatrixData [ Counter ] [ 22 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 23 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 24 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -711,17 +813,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 17:
             for ( Counter = 16 ; Counter < 20 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 17 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 17 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 17 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 17 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 17 == pos )
+                {
+                    MatrixData [ Counter ] [ 27 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 28 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 29 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -735,17 +843,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 18:
             for ( Counter = 23 ; Counter < 27 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 18 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 18 < pos ) )
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 3 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 18 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 18 < pos ) )
                 {
                     MatrixData [ Counter ] [ 2 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 3 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 4 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 18 == pos )
+                {
+                    MatrixData [ Counter ] [ 2 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 3 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 4 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -759,17 +873,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 19:
             for ( Counter = 23 ; Counter < 27 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 19 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 19 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 19 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 19 < pos ) )
                 {
                     MatrixData [ Counter ] [ 7 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 8 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 9 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 19 == pos )
+                {
+                    MatrixData [ Counter ] [ 7 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 8 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 9 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -783,17 +903,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 20:
             for ( Counter = 23 ; Counter < 27 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 20 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 20 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 20 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 20 < pos ) )
                 {
                     MatrixData [ Counter ] [ 12 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 13 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 14 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 20 == pos )
+                {
+                    MatrixData [ Counter ] [ 12 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 13 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 14 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -807,17 +933,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 21:
             for ( Counter = 23 ; Counter < 27 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 21 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 21 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 21 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 21 < pos ) )
                 {
                     MatrixData [ Counter ] [ 17 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 18 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 19 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 21 == pos )
+                {
+                    MatrixData [ Counter ] [ 17 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 18 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 19 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -831,17 +963,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 22:
             for ( Counter = 23 ; Counter < 27 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 22 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 22 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 22 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 22 < pos ) )
                 {
                     MatrixData [ Counter ] [ 22 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 23 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 24 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 22 == pos )
+                {
+                    MatrixData [ Counter ] [ 22 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 23 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 24 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -855,17 +993,23 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
         case 23:
             for ( Counter = 23 ; Counter < 27 ; Counter++ )
             {
-                if ( ( SENSOR_FAIL == state ) && ( 23 <= pos ) )
+                if ( ( SENSOR_FAIL == state ) && ( 23 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_RED_BOTTOM + MatrixRow [ Counter ];
                 }
-                else if ( ( SENSOR_PASS == state ) && ( 23 <= pos ) )
+                else if ( ( SENSOR_PASS == state ) && ( 23 < pos ) )
                 {
                     MatrixData [ Counter ] [ 27 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 28 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
                     MatrixData [ Counter ] [ 29 ] = LED_GREEN_BOTTOM + MatrixRow [ Counter ];
+                }
+                else if ( 23 == pos )
+                {
+                    MatrixData [ Counter ] [ 27 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 28 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
+                    MatrixData [ Counter ] [ 29 ] = LED_YELLOW_BOTTOM + MatrixRow [ Counter ];
                 }
                 else    // Invalid state
                 {
@@ -881,7 +1025,7 @@ void SetMatrix_Buffer ( uint8_t sensor , uint8_t state , uint8_t pos )
     }
 }
 
-void watchdog ( void )
+static void Watchdog ( void )
 {
     watchdog_update ( );
 }
