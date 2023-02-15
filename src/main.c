@@ -291,7 +291,6 @@ void Matrix_Draw ( void )
         MATRIX_OUTPUT_ON;
         sleep_us ( MATRIX_DELAY_REFRESH );
     }
-
 }
 
 void Matrix_SetBuffer ( uint8_t sensor , uint8_t state , uint8_t pos )
